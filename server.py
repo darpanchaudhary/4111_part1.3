@@ -193,10 +193,10 @@ def players():
   playerid = g.conn.execute(get_id_query)
   for result in playerid:
     n_id = result["max_id"]
-  logging.info("---------------------")
-  logging.info(type(playerid))
-  logging.info(playerid)
-  logging.info("---------------------")
+  print("---------------------")
+  print(type(playerid))
+  print(playerid)
+  print("---------------------")
   return render_template("players.html", id = n_id+1)
 
 
@@ -214,8 +214,8 @@ def processplayers():
   if rating != "":
     if rating<0:
       return redirect('/error')
-  logging.info("---------------------")
-  logging.info("INSERT INTO players VALUES(" + id + "," + name + "," + joined + "," + rating+ ");")
+  print("---------------------")
+  print("INSERT INTO players VALUES(" + id + "," + name + "," + joined + "," + rating+ ");")
   g.conn.execute("INSERT INTO players VALUES(" + id + "," + name + "," + joined + "," + rating+ ");")
 
 
