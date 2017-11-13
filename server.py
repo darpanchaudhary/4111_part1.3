@@ -205,7 +205,8 @@ def players():
 @app.route('/insertplayers', methods=['GET', 'POST'])
 def insertplayers():
   logging.error("hello you reached me")
-  playerid = request.form['id']
+  playerid = request.form['playerid']
+  print("------=====+++")
   logging.error("playerid")
   name = "'" +request.form['name']+ "'"
   if name == "":
