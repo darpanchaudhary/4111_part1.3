@@ -213,10 +213,7 @@ def players():
 
 @app.route('/insertplayers', methods=['GET', 'POST'])
 def insertplayers():
-  logging.error("hello you reached me")
   playerid = NEW_PLAYER_ID
-  print("------=====+++")
-  logging.error("playerid")
   name = "'" +request.form['name']+ "'"
   if name == "":
         return redirect('/error')
@@ -224,10 +221,15 @@ def insertplayers():
   
   rating = request.form['rating']
 
-  print (playerid)
-  print("============++++++++++++++++")
-  print("INSERT INTO players VALUES(" + str(playerid) + "," + name + "," + joined + "," + str(rating)+ ");")
   g.conn.execute("INSERT INTO players VALUES(" + str(playerid) + "," + name + "," + joined + "," + str(rating)+ ");")
+  return redirect('/success')
+
+@app.route('/deleteplayers', methods=['GET', 'POST'])
+def deleteplayers():
+  playerid = request.form.get("option")
+  print ("++++++++++")
+  print(playerid)
+  g.conn.execute("DELETE FROM players WHERE playerid =" + str(playerid) +";")
   return redirect('/success')
 
 
