@@ -38,7 +38,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 
 # DATABASEURI = "postgresql://kq2129:3782@104.196.18.7/w4111"
 DATABASEURI = "postgresql://kq2129:3782@35.196.90.148/proj1part2"
-
+NEW_PLAYER_ID = -1
 
 
 #
@@ -193,10 +193,7 @@ def players():
   playerid = g.conn.execute(get_id_query)
   for result in playerid:
     n_id = result["max_id"]
-  logging.error("---------------------")
-  print(type(playerid))
-  print(playerid)
-  print("---------------------")
+  NEW_PLAYER_ID=n_id
   return render_template("players.html", id = n_id+1)
 
 
@@ -205,7 +202,7 @@ def players():
 @app.route('/insertplayers', methods=['GET', 'POST'])
 def insertplayers():
   logging.error("hello you reached me")
-  playerid = request.form['playerid']
+  playerid = NEW_PLAYER_ID
   print("------=====+++")
   logging.error("playerid")
   name = "'" +request.form['name']+ "'"
