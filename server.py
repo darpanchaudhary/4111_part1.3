@@ -217,8 +217,8 @@ def insertplayers():
 
   print (playerid)
   print("============++++++++++++++++")
-  print("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
-  g.conn.execute("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
+  print("INSERT INTO players VALUES(" + str(playerid) + "," + name + "," + joined + "," + str(rating)+ ");")
+  g.conn.execute("INSERT INTO players VALUES(" + str(playerid) + "," + name + "," + joined + "," + str(rating)+ ");")
   return redirect('/success')
 
 
