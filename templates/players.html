@@ -9,7 +9,8 @@
 
 
 <body>
- <h1>Games</h1>
+ <h1>players</h1>
+ <h2>Insert players</h2>
  <form method = "POST" action = "/insertplayers">
     <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
     <p> Name: <input type = "text" name = "name" > </p>
@@ -19,7 +20,7 @@
  	<p><input type = "submit" value = "Submit"></p> 
  </form>
 
-
+<h2>Insert players</h2>
  <form method = "POST" action = "/deleteplayers">
     <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
     <td>
@@ -36,11 +37,12 @@
  
  </form>
 
+<h2>Delete players</h2>
  <form method = "POST" action = "/queryplayers">
     <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
     <td>
     <label> Select Player: </label>
-	    <select name="option" width="300px">
+	    <select name="option2" width="300px">
 		{% for player in player_list %}
 		    <option value="{{ player.playerid }}" SELECTED>{{ player.name }}</option>
 		{% endfor %}
