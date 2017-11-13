@@ -241,7 +241,7 @@ def queryplayers():
   for result in no_games_result:
     no_games = result["no_games"]
   
-  win_no_result = g.conn.execute("SELECT COUNT(*) as no_games from games, results where ((wplayer =" +  str(playerid) + "AND wpoints=1) OR (bplayer = " + str(playerid)+ " AND bpoints=1)) and games.gameid=results.gameid")
+  win_no_result = g.conn.execute("SELECT COUNT(*) as no_win from games, results where ((wplayer =" +  str(playerid) + "AND wpoints=1) OR (bplayer = " + str(playerid)+ " AND bpoints=1)) and games.gameid=results.gameid")
   for result in win_no_result:
     no_win = result["no_win"]
   print(no_games)
