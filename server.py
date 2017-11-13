@@ -203,7 +203,8 @@ def players():
 
 
 @app.route('/insertplayers', methods=['GET', 'POST'])
-def processplayers():
+def insertplayers():
+  logging.error("hello you reached me")
   playerid = request.form['id']
   name = "'" +request.form['name']+ "'"
   if name == "":
