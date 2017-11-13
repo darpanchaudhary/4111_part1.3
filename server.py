@@ -171,19 +171,19 @@ def another():
   return render_template("another.html")
 '''
 @app.route('/games')
-def another():
+def games():
   return render_template("games.html")
 
 @app.route('/tournaments')
-def another():
+def tournaments():
   return render_template("tournaments.html")
 
 @app.route('/organizers')
-def another():
+def organizers():
   return render_template("organizers.html")
 
 @app.route('/players')
-def another():
+def players():
   return render_template("players.html")
 
 
