@@ -210,7 +210,7 @@ def processplayers():
         return redirect('/error')
   joined = "'" + request.form['joined']+ "'"
   
-  rating = request.form['rating
+  rating = request.form['rating']
   print("---------------------")
   print("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
   g.conn.execute("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
