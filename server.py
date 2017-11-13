@@ -234,9 +234,18 @@ def deleteplayers():
 
 @app.route('/queryplayers', methods=['GET', 'POST'])
 def queryplayers():
-  playerid = request.form.get("option2")
+  player_name = ""
+  player_joined = 0
+  playerid = 0
+
   print ("++++++++++")
   print(playerid)
+
+  player_detail =g.conn.execute("SELECT name, joined, rating FROM players where playerid=" + str(playerid)+ ";")
+  for result in player_detail:
+    player_name = result['name']
+    player_joined = result['joined']
+    player_rating = result['rating']
   no_games_result =g.conn.execute("SELECT COUNT(*) as no_games from games where wplayer =" +  str(playerid) + " OR bplayer = " + str(playerid)+ ";")
   for result in no_games_result:
     no_games = result["no_games"]
@@ -246,8 +255,13 @@ def queryplayers():
     no_win = result["no_win"]
   print(no_games)
   print(no_win)
+  if (no_games==0):
+    win_percentage = 0
+  else:
+    win_percentage = (no_win/no_games) * 100
 
-  return redirect('/success')
+
+  return render_template("players.html", player_id = playerid, name=player_name, rating=rating, no_played=no_games, no_won=no_win, win_percentage=win_percentage)
 
 
 
