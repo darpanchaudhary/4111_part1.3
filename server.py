@@ -206,6 +206,7 @@ def players():
 def insertplayers():
   logging.error("hello you reached me")
   playerid = request.form['id']
+  logging.error("playerid")
   name = "'" +request.form['name']+ "'"
   if name == "":
         return redirect('/error')
