@@ -193,7 +193,7 @@ def players():
   playerid = g.conn.execute(get_id_query)
   for result in playerid:
     n_id = result["max_id"]
-  NEW_PLAYER_ID=n_id
+  global NEW_PLAYER_ID=n_id + 1
   print("---_+++++++++")
   print(n_id)
   return render_template("players.html", id = n_id+1)
@@ -213,6 +213,7 @@ def insertplayers():
   joined = "'" + request.form['joined']+ "'"
   
   rating = request.form['rating']
+
   print (playerid)
   print("============++++++++++++++++")
   print("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
