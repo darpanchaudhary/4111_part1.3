@@ -184,7 +184,23 @@ def organizers():
 
 @app.route('/players')
 def players():
-  return render_template("players.html")
+  get_id_query = "SELECT max(playerid) FROM players;"
+  id = g.conn.execute(get_id_query)
+  return render_template("players.html", id = id)
+
+
+
+
+@app.route('/insertplayers', methods=['GET', 'POST'])
+def processplayers():
+  name = "'" +request.form['name']+ "'"
+  if name == "":
+        return redirect('/error')
+    
+    
+  emailexist = "SELECT S.email FROM Student S WHERE S.email = '" + request.form['email'] + "';"
+  cursor = g.conn.execute(emailexist)
+
 
 
 # Example of adding new data to the database
