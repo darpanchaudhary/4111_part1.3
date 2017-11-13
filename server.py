@@ -193,7 +193,7 @@ def players():
   playerid = g.conn.execute(get_id_query)
   for result in playerid:
     n_id = result["max_id"]
-  print("---------------------")
+  logging.error("---------------------")
   print(type(playerid))
   print(playerid)
   print("---------------------")
@@ -204,16 +204,13 @@ def players():
 
 @app.route('/insertplayers', methods=['GET', 'POST'])
 def processplayers():
-  playerid = "'" +request.form['id']+ "'"
+  playerid = request.form['id']
   name = "'" +request.form['name']+ "'"
   if name == "":
         return redirect('/error')
   joined = "'" + request.form['joined']+ "'"
   
-  rating = "'" + request.form['rating']+ "'"
-  if rating != "":
-    if rating<0:
-      return redirect('/error')
+  rating = request.form['rating
   print("---------------------")
   print("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
   g.conn.execute("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
