@@ -188,7 +188,7 @@ def players():
   id = g.conn.execute(get_id_query)
   for result in id:
     n_id = result["max_id"]
-  return render_template("players.html", id = n_id)
+  return render_template("players.html", id = id[0]["max_id"]+1)
 
 
 
