@@ -34,7 +34,13 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://biliris:foobar@104.196.18.7/w4111"
 #
+<<<<<<< HEAD
+# DATABASEURI = "postgresql://kq2129:3782@104.196.18.7/w4111"
+DATABASEURI = "postgresql://kq2129:3782@35.196.90.148/w4111"
+
+=======
 DATABASEURI = "postgresql://user:password@104.196.18.7/w4111"
+>>>>>>> 855da25267f3c4745cd6fe78c21df7ca082c35b8
 
 
 #
@@ -162,9 +168,33 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
+<<<<<<< HEAD
+'''
 @app.route('/another')
 def another():
   return render_template("another.html")
+'''
+@app.route('/games')
+def another():
+  return render_template("games.html")
+
+@app.route('/tournaments')
+def another():
+  return render_template("tournaments.html")
+
+@app.route('/organizers')
+def another():
+  return render_template("organizers.html")
+
+@app.route('/players')
+def another():
+  return render_template("players.html")
+
+=======
+@app.route('/another')
+def another():
+  return render_template("another.html")
+>>>>>>> 855da25267f3c4745cd6fe78c21df7ca082c35b8
 
 
 # Example of adding new data to the database
