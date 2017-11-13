@@ -194,6 +194,8 @@ def players():
   for result in playerid:
     n_id = result["max_id"]
   NEW_PLAYER_ID=n_id
+  print("---_+++++++++")
+  print(n_id)
   return render_template("players.html", id = n_id+1)
 
 
