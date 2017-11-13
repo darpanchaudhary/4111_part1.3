@@ -178,7 +178,7 @@ def error():
   return render_template("error.html")
 
 @app.route('/success')
-def error():
+def success():
   return render_template("success.html")
 
 @app.route('/games')
