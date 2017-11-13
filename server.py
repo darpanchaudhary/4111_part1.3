@@ -98,9 +98,6 @@ def teardown_request(exception):
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-@app.route('/error')
-def error():
-  return render_template("error.html")
 
 @app.route('/')
 def index():
@@ -175,6 +172,15 @@ def index():
 def another():
   return render_template("another.html")
 '''
+
+@app.route('/error')
+def error():
+  return render_template("error.html")
+
+@app.route('/success')
+def error():
+  return render_template("success.html")
+
 @app.route('/games')
 def games():
   return render_template("games.html")
