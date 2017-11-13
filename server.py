@@ -234,10 +234,12 @@ def deleteplayers():
 
 @app.route('/queryplayers', methods=['GET', 'POST'])
 def queryplayers():
-  player_name = ""
-  player_joined = 0
-  playerid = 0
+  # player_name = ""
+  # player_joined = 0
+  # playerid = 0
+  # player_rating=0
 
+  playerid = request.form.get("option2")
   print ("++++++++++")
   print(playerid)
 
