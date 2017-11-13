@@ -261,7 +261,7 @@ def queryplayers():
     win_percentage = (no_win/no_games) * 100
 
 
-  return render_template("players.html", player_id = playerid, name=player_name, rating=rating, no_played=no_games, no_won=no_win, win_percentage=win_percentage)
+  return render_template("players.html", player_id = playerid, name=player_name, rating=player_rating, no_played=no_games, no_won=no_win, win_percentage=win_percentage)
 
 
 
