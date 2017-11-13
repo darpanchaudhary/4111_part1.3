@@ -186,7 +186,7 @@ def organizers():
 def players():
   get_id_query = "SELECT max(playerid) FROM players;"
   id = g.conn.execute(get_id_query)
-  return render_template("players.html", id = id)
+  return render_template("players.html", id = id[0])
 
 
 
