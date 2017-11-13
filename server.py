@@ -15,6 +15,7 @@ Read about it online.
 """
 
 import os
+import logging
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
@@ -97,6 +98,10 @@ def teardown_request(exception):
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
+@app.route('/error')
+def error():
+  return render_template("error.html")
+
 @app.route('/')
 def index():
   """
@@ -185,23 +190,31 @@ def organizers():
 @app.route('/players')
 def players():
   get_id_query = "SELECT max(playerid) AS max_id FROM players;"
-  id = g.conn.execute(get_id_query)
-  for result in id:
+  playerid = g.conn.execute(get_id_query)
+  for result in playerid:
     n_id = result["max_id"]
-  return render_template("players.html", id = id[0]["max_id"]+1)
+  logging.info(type(playerid))
+  logging.info(playerid)
+  return render_template("players.html", id = n_id+1)
 
 
 
 
 @app.route('/insertplayers', methods=['GET', 'POST'])
 def processplayers():
+  playerid = "'" +request.form['id']+ "'"
   name = "'" +request.form['name']+ "'"
   if name == "":
         return redirect('/error')
-    
-    
-  emailexist = "SELECT S.email FROM Student S WHERE S.email = '" + request.form['email'] + "';"
-  cursor = g.conn.execute(emailexist)
+  joined = "'" + request.form['joined']+ "'"
+  
+  rating = "'" + request.form['rating']+ "'"
+  if rating != "":
+    if rating<0:
+      return redirect('/error')
+
+  g.conn.execute("INSERT INTO players VALUES(" + id + "," + name + "," + joined + "," + rating+ ");")
+
 
 
 
