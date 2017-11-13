@@ -201,9 +201,12 @@ def players():
     n_id =result['max_id']
   global NEW_PLAYER_ID 
   NEW_PLAYER_ID = n_id + 1
-  print("---_+++++++++")
   print(n_id)
-  return render_template("players.html", id = n_id+1)
+  players = []
+  players_list = g.conn.execute("SELECT playerid, name FROM players;")
+  for result in players_list:
+    players.append({"name": result['name'], "playerid": result['playerid'] })
+  return render_template("players.html", id = n_id+1, player_list=players)
 
 
 

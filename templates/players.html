@@ -20,6 +20,21 @@
  </form>
 
 
+ <form method = "POST" action = "/deleteplayers">
+    <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
+    <td>
+    <label> Select Player: </label>
+	    <select name="option" width="300px">
+		{% for player in player_list %}
+		    <option value="{{ player.name }}" SELECTED>{{ player.playerid }}</option>
+		{% endfor %}
+		</select>
+	</td>
+	<td>
+	    <input class="button1" type="submit" value="Select">
+	</td>
+ 
+ </form>
 
 
 
