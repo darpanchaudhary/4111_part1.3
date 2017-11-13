@@ -215,8 +215,10 @@ def processplayers():
     if rating<0:
       return redirect('/error')
   print("---------------------")
-  print("INSERT INTO players VALUES(" + id + "," + name + "," + joined + "," + rating+ ");")
-  g.conn.execute("INSERT INTO players VALUES(" + id + "," + name + "," + joined + "," + rating+ ");")
+  print("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
+  g.conn.execute("INSERT INTO players VALUES(" + playerid + "," + name + "," + joined + "," + rating+ ");")
+  return redirect('/success')
+
 
 
 
