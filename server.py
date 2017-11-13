@@ -192,8 +192,9 @@ def players():
   get_id_query = "SELECT max(playerid) AS max_id FROM players;"
   playerid = g.conn.execute(get_id_query)
   for result in playerid:
-    n_id = result["max_id"]
-  global NEW_PLAYER_ID=n_id + 1
+  
+  global NEW_PLAYER_ID 
+  NEW_PLAYER_ID = n_id + 1
   print("---_+++++++++")
   print(n_id)
   return render_template("players.html", id = n_id+1)
