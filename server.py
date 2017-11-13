@@ -184,9 +184,11 @@ def organizers():
 
 @app.route('/players')
 def players():
-  get_id_query = "SELECT max(playerid) FROM players;"
+  get_id_query = "SELECT max(playerid) AS max_id FROM players;"
   id = g.conn.execute(get_id_query)
-  return render_template("players.html", id = id[0])
+  for result in id:
+    n_id = result["max_id"]
+  return render_template("players.html", id = n_id)
 
 
 
