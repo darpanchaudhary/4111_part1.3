@@ -53,6 +53,8 @@ NEW_GAME_ID = -1
 
 
 
+
+
 pieces = {'R':1,
          'N':2,
          'B':3,
@@ -319,6 +321,8 @@ def players():
 
 @app.route('/insertmoves', methods=['GET', 'POST'])
 def insertmoves():
+  board = chess.Board()
+  moves = request.form['pgn']
   positions_list = []
   moves_info =[]
   splitted_move =moves.split('\n')
@@ -349,14 +353,13 @@ def insertmoves():
     raise ValueError
 
   for i in range(len(positions_list)):
-    g.conn.execute("INSERT INTO games VALUES(" + str(gameid) + "," + str(wplayer) + "," + str(bplayer) + "," + pgn_text + "," + played_on + "," + str(tournament)+ ");")
-    position_id = g.conn.execute("SELECT MAX(positionid) as max_pos from positions);")
+    position_id = g.conn.execute("SELECT MAX(positionid) as max_pos from positions;")
     for result in position_id:
       pos_id = result["max_pos"] + 1
 
-    position_row = "(" + pos_id + ", " + "'{" + positions_list[i] + "}'),"
-    position_list[i]=[str(i) for i in position_list[i]]
-    g.conn.execute("INSERT INTO positions VALUES" + "(" + pos_id + ", " + "'{" + positions_list[i] + "}');")
+    position_row = "(" + str(pos_id) + ", " + "'{" + positions_list[i] + "}'),"
+    #position_list[i]=[str(i) for i in position_list[i]]
+    g.conn.execute("INSERT INTO positions VALUES" + "(" + str(pos_id) + ", " + "'{" + positions_list[i] + "}');")
     #position_query.append(position_row)
     
     #print (position_row)
