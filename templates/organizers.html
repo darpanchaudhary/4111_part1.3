@@ -1,0 +1,72 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+ <h1>Organizers</h1>
+ <h2>Insert Organizer</h2>
+ <form method = "POST" action = "/insertorganizers">
+    <p> ID: <input type = "text" name = "organizerid" value = "{{id}}" disabled> </p>
+    <p> Name: <input type = "text" name = "name" > </p>
+    <p> Endowment: <input type = "text" name = "endowment" > </p>
+ 	<p><input type = "submit" value = "Submit"></p> 
+ </form>
+
+<h2>Delete Organizer</h2>
+ <form method = "POST" action = "/deleteorganizer">
+    <p> ID: <input type = "text" name = "organizerid" value = "{{id}}" disabled> </p>
+    <td>
+    <label> Select Organizer: </label>
+	    <select name="option" width="300px">
+		{% for organizer in organizer_list %}
+		    <option value="{{ organizer.organizerid }}" SELECTED>{{ organizer.name }}</option>
+		{% endfor %}
+		</select>
+	</td>
+	<td>
+	    <input class="button1" type="submit" value="delete">
+	</td>
+ </form>
+
+<h2>Query Organizers</h2>
+ <form method = "POST" action = "/queryorganizers">
+    <p> ID: <input type = "text" name = "organizerid" value = "{{id}}" disabled> </p>
+    <td>
+    <label> Select Organizer: </label>
+	    <select name="option2" width="300px">
+		{% for organizer in organizer_list %}
+		    <option value="{{ organizer.organizerid }}" SELECTED>{{ organizer.name }}</option>
+		{% endfor %}
+		</select>
+	</td>
+	<td>
+	    <input class="button1" type="submit" value="Display Organizer">
+	</td>
+ 
+ </form>
+
+ <h3>Organizer Informantion</h3>
+            <table id="orga-stat-table" class="table table-hover table-bordered" border = "1">
+            <tr class="column-name">
+                <th>Organizer ID</th>
+                <th>Organizer Name</th>
+                <th>Organizer Endowment</th>
+                <th>Tournaments Organized</th>
+            </tr>
+            <tr>
+            	<th>{{o_id}}</th>
+                <th>{{o_name}}</th>
+                <th>{{o_endowment}}</th>
+                <th>{{o_num_tourn}}</th>
+            </tr>
+            </table>
+
+</body>
+
+
+</html>

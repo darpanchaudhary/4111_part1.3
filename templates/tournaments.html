@@ -1,1 +1,77 @@
-hello, I am tournaments file!
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+ <h1>Tournaments</h1>
+ <h2>Insert Tournament</h2>
+ <form method = "POST" action = "/inserttournaments">
+    <p> ID: <input type = "text" name = "tournamentid" value = "{{id}}" disabled> </p>
+    <p> Name: <input type = "text" name = "name" > </p>
+    <p> Start_Date: <input type = "date" name = "start_date" value = "2017-06-01"> </p>
+    <p> End_Date: <input type = "date" name = "end_date" value = "2017-06-01"> </p>
+    <p> Prize: <input type = "text" name = "prize" > </p>
+ 	<p><input type = "submit" value = "Submit"></p> 
+ </form>
+
+<h2>Delete Tournament</h2>
+ <form method = "POST" action = "/deletetournament">
+    <p> ID: <input type = "text" name = "tournamentid" value = "{{id}}" disabled> </p>
+    <td>
+    <label> Select Tournament: </label>
+	    <select name="option" width="300px">
+		{% for tournament in tournament_list %}
+		    <option value="{{ tournament.tournamentid }}" SELECTED>{{ tournament.name }}</option>
+		{% endfor %}
+		</select>
+	</td>
+	<td>
+	    <input class="button1" type="submit" value="delete">
+	</td>
+ 
+ </form>
+
+<h2>Query Tournaments</h2>
+ <form method = "POST" action = "/querytournaments">
+    <p> ID: <input type = "text" name = "tournamentid" value = "{{id}}" disabled> </p>
+    <td>
+    <label> Select Tournament: </label>
+	    <select name="option2" width="300px">
+		{% for tournament in tournament_list %}
+		    <option value="{{ tournament.tournamentid }}" SELECTED>{{ tournament.name }}</option>
+		{% endfor %}
+		</select>
+	</td>
+	<td>
+	    <input class="button1" type="submit" value="Display Tournament">
+	</td>
+ 
+ </form>
+
+ <h3>Tournament Informantion</h3>
+            <table id="tourn-stat-table" class="table table-hover table-bordered" border = "1">
+            <tr class="column-name">
+                <th>Tournament ID</th>
+                <th>Tournament Name</th>
+                <th>Tournament Start</th>
+                <th>Tournament End</th>
+                <th>Number of Games</th>
+            </tr>
+            <tr>
+            	<th>{{t_id}}</th>
+                <th>{{t_name}}</th>
+                <th>{{t_start}}</th>
+                <th>{{t_end}}</th>
+                <th>{{t_num_games}}</th>
+            </tr>
+            </table>
+
+</body>
+
+
+</html>

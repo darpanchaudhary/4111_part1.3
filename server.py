@@ -187,11 +187,109 @@ def games():
 
 @app.route('/tournaments')
 def tournaments():
-  return render_template("tournaments.html")
+  get_id_query = "SELECT max(tournamentid) AS max_id FROM tournaments;"
+  tournamentid = g.conn.execute(get_id_query)
+  for result in tournamentid:
+    n2_id =result['max_id']
+  global NEW_TOURNAMENT_ID 
+  NEW_TOURNAMENT_ID = n2_id + 1
+  print(n2_id)
+  tournaments = []
+  tournament_list = g.conn.execute("SELECT tournamentid, name FROM tournaments;")
+  for result in tournament_list:
+    tournaments.append({"name": result['name'], "tournamentid": result['tournamentid'] })
+  return render_template("tournaments.html", id = n2_id+1, tournament_list = tournaments)
+
+@app.route('/inserttournaments', methods=['GET', 'POST'])
+def inserttournaments():
+  tournamentid = NEW_TOURNAMENT_ID
+  name = "'" +request.form['name']+ "'"
+  if name == "":
+        return redirect('/error')
+  start_date = "'" + request.form['start_date']+ "'"
+  end_date = "'" + request.form['end_date']+ "'"
+  prize = "'" + request.form['prize']+ "'"
+
+  g.conn.execute("INSERT INTO tournaments VALUES(" + str(tournamentid) + "," + name + "," + start_date + "," + end_date + "," + prize + ");")
+  return redirect('/success')
+
+@app.route('/querytournaments', methods=['GET', 'POST'])
+def querytournaments():
+  tournamentid = request.form.get("option2")
+  print ("++++++++++")
+  print(tournamentid)
+
+  tournament_detail =g.conn.execute("SELECT name, start_date, end_date, prize FROM tournaments where tournamentid=" + str(tournamentid)+ ";")
+  for result in tournament_detail:
+    tournament_name = result['name']
+    tournament_start = result['start_date']
+    tournament_end = result['end_date']
+    tournament_prize = result['prize']
+  num_games_result = g.conn.execute("SELECT COUNT(*) as num_games from games where tournament =" +  str(tournamentid) + ";")
+  for result in num_games_result:
+    num_games = result["num_games"]
+  
+  return render_template("tournaments.html", t_id = tournamentid, t_name=tournament_name, t_start=tournament_start, t_end=tournament_end, t_num_games=num_games)
+
+
+@app.route('/deletetournament', methods=['GET', 'POST'])
+def deletetournament():
+  tournamentid = request.form.get("option")
+  print ("++++++++++")
+  print(tournamentid)
+  g.conn.execute("DELETE FROM tournaments WHERE tournamentid =" + str(tournamentid) + ";")
+  return redirect('/success')
+
 
 @app.route('/organizers')
 def organizers():
-  return render_template("organizers.html")
+  get_id_query = "SELECT max(organizerid) AS max_id FROM organizers;"
+  organizerid = g.conn.execute(get_id_query)
+  for result in organizerid:
+    n3_id =result['max_id']
+  global NEW_ORGANIZER_ID 
+  NEW_ORGANIZER_ID = n3_id + 1
+  print(n3_id)
+  organizers = []
+  organizer_list = g.conn.execute("SELECT organizerid, name FROM organizers;")
+  for result in organizer_list:
+    organizers.append({"name": result['name'], "organizerid": result['organizerid'] })
+  return render_template("organizers.html", id = n3_id+1, organizer_list = organizers)
+
+@app.route('/insertorganizers', methods=['GET', 'POST'])
+def insertorganizers():
+  organizerid = NEW_ORGANIZER_ID
+  name = "'" +request.form['name']+ "'"
+  if name == "":
+        return redirect('/error')
+  endowment = "'" + request.form['endowment']+ "'"
+
+  g.conn.execute("INSERT INTO organizers VALUES(" + str(organizerid) + "," + name + "," + endowment + ");")
+  return redirect('/success')
+
+@app.route('/queryorganizers', methods=['GET', 'POST'])
+def queryorganizers():
+  organizerid = request.form.get("option2")
+  print ("++++++++++")
+  print(organizerid)
+
+  organizer_detail =g.conn.execute("SELECT name, endowment FROM organizers where organizerid=" + str(organizerid)+ ";")
+  for result in organizer_detail:
+    organizer_name = result['name']
+    organizer_endowment = result['endowment']
+  num_tourn_result = g.conn.execute("SELECT COUNT(*) as num_tourn from organize_tournament where organizerid =" +  str(organizerid) + ";")
+  for result in num_tourn_result:
+    num_tourn = result["num_tourn"]
+  
+  return render_template("organizers.html", o_id = organizerid, o_name=organizer_name, o_endowment=organizer_endowment, o_num_tourn=num_tourn)
+
+@app.route('/deleteorganizer', methods=['GET', 'POST'])
+def deleteorganizer():
+  organizerid = request.form.get("option")
+  print ("++++++++++")
+  print(organizerid)
+  g.conn.execute("DELETE FROM organizers WHERE organizerid =" + str(organizerid) + ";")
+  return redirect('/success')
 
 @app.route('/players')
 def players():
@@ -207,8 +305,6 @@ def players():
   for result in players_list:
     players.append({"name": result['name'], "playerid": result['playerid'] })
   return render_template("players.html", id = n_id+1, player_list=players)
-
-
 
 
 @app.route('/insertplayers', methods=['GET', 'POST'])
