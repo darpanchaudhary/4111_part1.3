@@ -15,6 +15,8 @@ Read about it online.
 """
 
 import os
+import pgn
+import chess
 import logging
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
@@ -39,6 +41,84 @@ app = Flask(__name__, template_folder=tmpl_dir)
 # DATABASEURI = "postgresql://kq2129:3782@104.196.18.7/w4111"
 DATABASEURI = "postgresql://kq2129:3782@35.196.90.148/proj1part2"
 NEW_PLAYER_ID = -1
+NEW_GAME_ID = -1
+
+
+
+
+
+
+
+
+
+
+
+pieces = {'R':1,
+         'N':2,
+         'B':3,
+         'Q':4,
+         'K':5,
+         'P':6,
+         'r':7,
+         'n':8,
+         'b':9,
+         'q':10,
+         'k':11,
+         'p':12,
+         }
+
+def get_positions(str_board):
+
+    position_str = ''
+    splitted_position = str_board.split('\n')
+    for line in reversed(splitted_position):
+        for piece in line:
+            if piece in pieces:
+                position_str = position_str + ',' + str(pieces[piece])
+            elif piece =='.':
+                position_str = position_str + ',' + '0'
+
+    return position_str[1:]
+
+def get_move(pre_position, curr_position):
+    prev = 0
+    next = 0
+    piece =0
+
+
+    pre_position = pre_position.split(',')
+    curr_position = curr_position.split(',')
+
+
+    for i in range(len(pre_position)):
+        count_check = 0
+        if pre_position[i] != curr_position[i]:
+            count_check += 1
+            if curr_position[i] != '0':
+
+                piece = curr_position[i]
+                next = i+1
+            else:
+                prev = i+1
+
+    if  count_check > 2:
+         raise ValueError
+    return prev,next, piece
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #
@@ -183,7 +263,29 @@ def success():
 
 @app.route('/games')
 def games():
-  return render_template("games.html")
+  get_id_query = "SELECT max(gameid) AS max_id FROM games;"
+  gameid = g.conn.execute(get_id_query)
+  for result in gameid:
+    n_id =result['max_id']
+  global NEW_PLAYER_ID 
+  NEW_GAME_ID = n_id + 1
+  print(n_id)
+  players = []
+  tournaments = []
+  games =[]
+  players_list = g.conn.execute("SELECT playerid, name FROM players;")
+  for result in players_list:
+    players.append({"name": result['name'], "playerid": result['playerid'] })
+
+  tournament_list = g.conn.execute("SELECT tournamentid, name FROM tournaments;")
+  for result in tournament_list:
+    tournaments.append({"name": result['name'], "tournamentid": result['tournamentid'] })
+  
+  game_list = g.conn.execute("SELECT G.gameid, (select P.name from players P where P.playerid = G.wplayer) as wplayer, (select P2.name from players P2 where P2.playerid = G.bplayer) as bplayer, G.gameid FROM games G;")
+  for result in game_list:
+    games.append({"gameid": result['gameid'], "wplayer": result['wplayer'], "bplayer": result['wplayer'] })
+
+  return render_template("games.html", gameid = n_id+1, player_list=players, tournament_list=tournaments, game_list=games)
 
 @app.route('/tournaments')
 def tournaments():
@@ -201,7 +303,6 @@ def players():
     n_id =result['max_id']
   global NEW_PLAYER_ID 
   NEW_PLAYER_ID = n_id + 1
-  print(n_id)
   players = []
   players_list = g.conn.execute("SELECT playerid, name FROM players;")
   for result in players_list:
@@ -209,6 +310,44 @@ def players():
   return render_template("players.html", id = n_id+1, player_list=players)
 
 
+
+
+
+
+
+
+
+@app.route('/insertmoves', methods=['GET', 'POST'])
+def insertmoves():
+  pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/insertgames', methods=['GET', 'POST'])
+def insertgames():
+  gameid = NEW_GAME_ID
+  wplayer = request.form.get("w_option")
+  if wplayer == "":
+        return redirect('/error')
+  bplayer = request.form.get("b_option")
+  if bplayer == "":
+        return redirect('/error')
+  pgn_text = "'" +request.form['pgn']+ "'"
+  played_on = "'" + request.form['played_on']+ "'"
+  tournament = request.form.get("t_option")
+  print("INSERT INTO games VALUES(" + str(gameid) + "," + str(wplayer) + "," + str(bplayer) + "," + pgn_text + "," + played_on + "," + str(tournament)+ ");")
+  g.conn.execute("INSERT INTO games VALUES(" + str(gameid) + "," + str(wplayer) + "," + str(bplayer) + "," + pgn_text + "," + played_on + "," + str(tournament)+ ");")
+  return redirect('/success')
 
 
 @app.route('/insertplayers', methods=['GET', 'POST'])
@@ -220,15 +359,14 @@ def insertplayers():
   joined = "'" + request.form['joined']+ "'"
   
   rating = request.form['rating']
-
   g.conn.execute("INSERT INTO players VALUES(" + str(playerid) + "," + name + "," + joined + "," + str(rating)+ ");")
   return redirect('/success')
+
 
 @app.route('/deleteplayers', methods=['GET', 'POST'])
 def deleteplayers():
   playerid = request.form.get("option")
-  print ("++++++++++")
-  print(playerid)
+ 
   g.conn.execute("DELETE FROM players WHERE playerid =" + str(playerid) +";")
   return redirect('/success')
 
