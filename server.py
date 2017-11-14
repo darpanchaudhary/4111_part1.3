@@ -319,7 +319,55 @@ def players():
 
 @app.route('/insertmoves', methods=['GET', 'POST'])
 def insertmoves():
-  pass
+  positions_list = []
+  moves_info =[]
+  splitted_move =moves.split('\n')
+  pre_position = get_positions(str(board))
+  for line in splitted_move:
+    for move  in line.split(' '):
+      #print (i+1)
+      #try:
+      if move[-1] != '.':
+        board.push_san(move)
+        str_board = str(board)
+        curr_position = get_positions(str_board)
+        positions_list.append(curr_position)
+        prev, next, piece = get_move(pre_position, curr_position)
+        moves_info.append(str(prev)+ ', ' + str(next) + ', ' + str(piece))
+        pre_position = curr_position 
+
+
+  position_query = []
+
+  moves_query = []
+
+
+  print(len(positions_list))
+  print(len(moves_info))
+
+  if (len(positions_list) != len(moves_info)):
+    raise ValueError
+
+  for i in range(len(positions_list)):
+    g.conn.execute("INSERT INTO games VALUES(" + str(gameid) + "," + str(wplayer) + "," + str(bplayer) + "," + pgn_text + "," + played_on + "," + str(tournament)+ ");")
+    position_id = g.conn.execute("SELECT MAX(positionid) as max_pos from positions);")
+    for result in position_id:
+      pos_id = result["max_pos"] + 1
+
+    position_row = "(" + pos_id + ", " + "'{" + positions_list[i] + "}'),"
+    position_list[i]=[str(i) for i in position_list[i]]
+    g.conn.execute("INSERT INTO positions VALUES" + "(" + pos_id + ", " + "'{" + positions_list[i] + "}');")
+    #position_query.append(position_row)
+    
+    #print (position_row)
+
+  for i in range(len(moves_info)):
+      
+    moves_row = "(" + str(i+100) + ", " + "6" + ", " + str(i+1) + ", " + moves_info[i] + ", "+ str(i+100) + "),"
+    #moves_info.append(moves_row)
+    #print (moves_row)
+
+
 
 
 
