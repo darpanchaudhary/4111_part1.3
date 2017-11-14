@@ -356,6 +356,7 @@ def insertmoves():
     position_id = g.conn.execute("SELECT MAX(positionid) as max_pos from positions;")
     for result in position_id:
       pos_id = result["max_pos"] + 1
+      print(pos_id)
 
     position_row = "(" + str(pos_id) + ", " + "'{" + positions_list[i] + "}'),"
     #position_list[i]=[str(i) for i in position_list[i]]
