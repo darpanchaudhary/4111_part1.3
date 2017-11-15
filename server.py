@@ -256,10 +256,19 @@ def querygames1():
 def querygames2():
   gameid = request.form.get("")
   pos_array = "'" +request.form['position_array']+ "'"
+
   print ("++++++++++")
   print(pos_array)
 
-  return render_template("games.html")
+  position_detail = g.conn.execute("select positionid from positions where pos =" + pos_array + ";")
+  for result in position_detail:
+    position_id = result['positionid']
+  num_games_result = g.conn.execute("select distinct(p1.name, p2.name, g.played_on) as game " + 
+    " from games as g, moves as m, players as p1, players as p2 where g.gameid = m.gameid " + 
+    " and m.position = "+str(position_id)+ " and g.wplayer = p1.playerid and g.bplayer = p2.playerid; ")
+  for result in num_games_result:
+    game_detail = result['game']
+  return render_template("games.html", q2_game= game_detail)
 
 
 
