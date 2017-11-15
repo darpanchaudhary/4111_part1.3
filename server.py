@@ -368,7 +368,12 @@ def queryorganizers():
   for result in num_tourn_result:
     num_tourn = result["num_tourn"]
   
-  return render_template("organizers.html", o_id = organizerid, o_name=organizer_name, o_endowment=organizer_endowment, o_num_tourn=num_tourn)
+  tournament_details = g.conn.execute("select t.name from tournaments as t, organize_tournament as o where o.tournamentid = t.tournamentid and o.organizerid= " + str(organizerid)+ ";")
+  tournaments = []
+  for result in tournament_details:
+    tournament_names = str(result["name"])
+    tournaments.append(tournament_names)
+  return render_template("organizers.html", o_id = organizerid, o_name=organizer_name, o_endowment=organizer_endowment, o_num_tourn=num_tourn, o_tourns = tournaments)
 
 @app.route('/deleteorganizer', methods=['GET', 'POST'])
 def deleteorganizer():
