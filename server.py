@@ -316,7 +316,13 @@ def querytournaments():
   for result in num_games_result:
     num_games = result["num_games"]
   
-  return render_template("tournaments.html", t_id = tournamentid, t_name=tournament_name, t_start=tournament_start, t_end=tournament_end, t_num_games=num_games)
+  player_details = g.conn.execute("select distinct(p.name) from players as p, games as g where (p.playerid = g.wplayer or p.playerid = g.bplayer) and g.tournament =  " + str(tournamentid)+ ";")
+  players = []
+  for result in player_details:
+    player_names = str(result["name"])
+    players.append(player_names)
+
+  return render_template("tournaments.html", t_id = tournamentid, t_name=tournament_name, t_start=tournament_start, t_end=tournament_end, t_num_games=num_games, t_players=players)
 
 
 @app.route('/deletetournament', methods=['GET', 'POST'])
