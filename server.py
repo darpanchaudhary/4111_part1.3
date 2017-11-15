@@ -1,19 +1,5 @@
 #!/usr/bin/env python2.7
 
-"""
-Columbia's COMS W4111.001 Introduction to Databases
-Example Webserver
-
-To run locally:
-
-    python server.py
-
-Go to http://localhost:8111 in your browser.
-
-A debugger such as "pdb" may be helpful for debugging.
-Read about it online.
-"""
-
 import os
 import pgn
 import chess
@@ -25,35 +11,8 @@ from flask import Flask, request, render_template, g, redirect, Response
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
-
-#
-# The following is a dummy URI that does not connect to a valid database. You will need to modify it to connect to your Part 2 database in order to use the data.
-#
-# XXX: The URI should be in the format of: 
-#
-#     postgresql://USER:PASSWORD@104.196.18.7/w4111
-#
-# For example, if you had username biliris and password foobar, then the following line would be:
-#
-#     DATABASEURI = "postgresql://biliris:foobar@104.196.18.7/w4111"
-#
-
-# DATABASEURI = "postgresql://kq2129:3782@104.196.18.7/w4111"
 DATABASEURI = "postgresql://kq2129:3782@35.196.90.148/proj1part2"
 NEW_PLAYER_ID = -1
-NEW_GAME_ID = -1
-
-
-
-
-
-
-
-
-
-
-
-
 
 pieces = {'R':1,
          'N':2,
@@ -106,21 +65,6 @@ def get_move(pre_position, curr_position):
     if  count_check > 2:
          raise ValueError
     return prev,next, piece
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #
@@ -269,7 +213,7 @@ def games():
   gameid = g.conn.execute(get_id_query)
   for result in gameid:
     n_id =result['max_id']
-  global NEW_PLAYER_ID 
+  global NEW_GAME_ID 
   NEW_GAME_ID = n_id + 1
   print(n_id)
   players = []
@@ -283,11 +227,41 @@ def games():
   for result in tournament_list:
     tournaments.append({"name": result['name'], "tournamentid": result['tournamentid'] })
   
-  game_list = g.conn.execute("SELECT G.gameid, (select P.name from players P where P.playerid = G.wplayer) as wplayer, (select P2.name from players P2 where P2.playerid = G.bplayer) as bplayer, G.gameid FROM games G;")
+  game_list = g.conn.execute("SELECT G.gameid, (select P.name from players P where P.playerid = G.wplayer) as wplayer, (select P2.name from players P2 where P2.playerid = G.bplayer) as bplayer, G.played_on as played_on FROM games G;")
   for result in game_list:
-    games.append({"gameid": result['gameid'], "wplayer": result['wplayer'], "bplayer": result['wplayer'] })
+    games.append({"gameid": result['gameid'], "wplayer": result['wplayer'], "bplayer": result['wplayer'], "played_on": str(result['played_on'])})
 
-  return render_template("games.html", gameid = n_id+1, player_list=players, tournament_list=tournaments, game_list=games)
+  return render_template("games.html", gameid = NEW_GAME_ID, player_list=players, tournament_list=tournaments, game_list=games)
+
+@app.route('/deletegames', methods=['GET', 'POST'])
+def deletegames():
+  gameid = request.form.get("option_gd")
+  print ("++++++++++")
+  print(gameid)
+  g.conn.execute("DELETE FROM games WHERE gameid =" + str(gameid) + ";")
+  return redirect('/success')
+
+@app.route('/querygames1', methods=['GET', 'POST'])
+def querygames1():
+  gameid = request.form.get("option_g")
+  print ("++++++++++")
+  print(gameid)
+
+  game_detail =g.conn.execute("SELECT pgn FROM games where gameid=" + str(gameid)+ ";")
+  for result in game_detail:
+    game_pgn = result['pgn']
+  return render_template("games.html", pgn = game_pgn)
+
+@app.route('/querygames2', methods=['GET', 'POST'])
+def querygames2():
+  gameid = request.form.get("")
+  pos_array = "'" +request.form['position_array']+ "'"
+  print ("++++++++++")
+  print(pos_array)
+
+  return render_template("games.html")
+
+
 
 @app.route('/tournaments')
 def tournaments():
@@ -408,8 +382,6 @@ def players():
   for result in players_list:
     players.append({"name": result['name'], "playerid": result['playerid'] })
   return render_template("players.html", id = n_id+1, player_list=players)
-
-
 
 
 @app.route('/insertmoves', methods=['GET', 'POST'])

@@ -9,18 +9,18 @@
 
 
 <body>
- <h1>players</h1>
- <h2>Insert players</h2>
+ <h1>Players</h1>
+ <h2>Insert Player</h2>
  <form method = "POST" action = "/insertplayers">
     <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
     <p> Name: <input type = "text" name = "name" > </p>
     <p> joined date: <input type = "date" name = "joined" value = "2017-06-01"> </p>
     <p> Rating: <input type = "text" name = "rating" value = "0"> </p>
  	
- 	<p><input type = "submit" value = "Submit"></p> 
+ 	<p><input type = "submit" value = "Insert"></p> 
  </form>
 
-<h2>Delete players</h2>
+<h2>Delete Player</h2>
  <form method = "POST" action = "/deleteplayers">
     <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
     <td>
@@ -32,12 +32,12 @@
 		</select>
 	</td>
 	<td>
-	    <input class="button1" type="submit" value="delete">
+	    <input class="button1" type="submit" value="Delete">
 	</td>
  
  </form>
 
-<h2>Query players</h2>
+<h2>Query Players</h2>
  <form method = "POST" action = "/queryplayers">
     <p> ID: <input type = "text" name = "playerid" value = "{{id}}" disabled> </p>
     <td>
@@ -49,7 +49,7 @@
 		</select>
 	</td>
 	<td>
-	    <input class="button1" type="submit" value="Display Stat">
+	    <input class="button1" type="submit" value="Display Statistics">
 	</td>
  
  </form>

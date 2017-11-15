@@ -10,33 +10,33 @@
 
 <body>
  <h1>Games</h1>
- <h2>Insert Games</h2>
+ <h2>Insert Game</h2>
  <form method = "POST" action = "/insertgames">
     <p> ID: <input type = "text" name = "gameid" value = "{{gameid}}" disabled> </p>
     <td>
-    <label> Select Player with while piece: </label>
+    <label> White: </label>
 	    <select name="w_option" width="300px">
 		{% for player in player_list %}
 		    <option value="{{ player.playerid }}" SELECTED>{{ player.name }}</option>
 		{% endfor %}
 		</select>
 	</td>
-	<td>
-    <label> Select Player with black piece: </label>
+	<p>
+    <label> Black: </label>
 	    <select name="b_option" width="300px">
 		{% for player in player_list %}
 		    <option value="{{ player.playerid }}" SELECTED>{{ player.name }}</option>
 		{% endfor %}
 		</select>
-	</td>
+	</p>
 
 
-    <p> pgn text: <input type = "text" name = "pgn"> </p>
-    <p> Played On: <input type = "date" name = "played_on" value = "2017-06-01"> </p>
+    <p> PGN: <input type = "text" name = "pgn"> </p>
+    <p> Date: <input type = "date" name = "played_on" value = "2017-06-01"> </p>
     <td>
 
 
-    <label> Select tournament: </label>
+    <label> Tournament: </label>
 	    <select name="t_option" width="300px">
 		{% for tournament in tournament_list %}
 		    <option value="{{ tournament.tournamentid }}" SELECTED>{{ tournament.name }}</option>
@@ -45,85 +45,65 @@
 	</td>
 
  	
- 	<p><input type = "submit" value = "Submit"></p> 
+ 	<p><input type = "submit" value = "Insert"></p> 
  </form>
 
 
 
-<h2>Delete Games By players</h2>
+<h2>Delete Game</h2>
  <form method = "POST" action = "/deletegames">
     <td>
     <label> Select Game: </label>
 	    <select name="option_gd" width="300px">
 		{% for game in game_list %}
-		    <option value="{{ game.gameid }}" SELECTED>{{ game.wplayer + " vs " + game. bplayer }}</option>
+		    <option value="{{ game.gameid }}" SELECTED>{{ game.wplayer + " vs " + game.bplayer + " on " + game.played_on}}</option>
 		{% endfor %}
 		</select>
 	</td>
 	<td>
-	    <input class="button1" type="submit" value="Display Stat">
+	    <input class="button1" type="submit" value="Delete">
 	</td>
  
  </form>
 
-<h2>Query games by gameID</h2>
+
+<h2>View Game</h2>
  <form method = "POST" action = "/querygames1">
     <td>
     <label> Select Game: </label>
 	    <select name="option_g" width="300px">
 		{% for game in game_list %}
-		    <option value="{{ game.gameid }}" SELECTED>{{ game.wplayer + " vs " + game. bplayer }}</option>
+		    <option value="{{ game.gameid }}" SELECTED>{{ game.wplayer + " vs " + game.bplayer + " on " + game.played_on }}</option>
 		{% endfor %}
 		</select>
 	</td>
 	<td>
-	    <input class="button1" type="submit" value="Display Stat">
+	    <input class="button1" type="submit" value="Display PGN">
 	</td>
  
  </form>
 
  
 
-<h3>games Statistics</h3>
+<h3>Game PGN</h3>
             <table id="player-stat-table" class="table table-hover table-bordered" border = "1">
             <tr class="column-name">
-                <th>Player id</th>
-                <th>Player name</th>
-                <th>Rating</th>
-                <th>No of games played</th>
-                <th>No of games won</th>
-                <th>Win percentage</th>
+                <th>PGN</th>
             </tr>
             <tr>
-            	<th>{{row1}}</th>
-                <th>{{row2}}</th>
-                <th>{{row3}}</th>
-                <th>{{row4}}</th>
-                <th>{{row5}}</th>
-                <th>{{row6}}</th>
-                <th>{{row5}}</th>
-                <th>{{row8}}</th>
+            	<th>{{pgn}}</th>
             </tr>
             </table>
 
-<h2>Query games by start position</h2>
+
+<h2>Find Games by Position</h2>
  <form method = "POST" action = "/querygames2">
-    <p> Start Piece <input type = "text" name = "s" value = "{{id}}" disabled> </p>
+    <p> Input Position Array <input type = "text" name = "position_array" value = "{{id}}" > </p> 
 	<td>
-	    <input class="button1" type="submit" value="Display Stat">
+	    <input class="button1" type="submit" value="List Games">
 	</td>
  </form>
- 
-
-<h2>Insert Moves</h2>
- <form method = "POST" action = "/insertmoves">
-    <p> PGN file info <input type = "text" name = "pgn" > </p>
-    <p><input type = "submit" value = "Submit"></p> 
- </form>
-
 
 
 </body>
-
-
 </html>
