@@ -261,20 +261,20 @@ def querygames2():
 
   print ("++++++++++")
   print(pos_array)
-
+  positions = []
   position_detail = g.conn.execute("select positionid from positions where pos =" + pos_array + ";")
   for result in position_detail:
     position_id = result['positionid']
-  print(str(position_id))
-  num_games_result = g.conn.execute("select distinct(p1.name, p2.name, g.played_on) as game " + 
-    " from games as g, moves as m, players as p1, players as p2 where g.gameid = m.gameid " + 
-    " and m.position = "+str(position_id)+ " and g.wplayer = p1.playerid and g.bplayer = p2.playerid; ")
+    positions.append(str(position_id))
+  print(str(positions))
   games = []
-  for result in num_games_result:
-    game_detail = result['game']
-    print(game_detail)
-    games.append(str(game_detail))
-  print(games[0])
+  for positionid1 in positions:
+    num_games_result = g.conn.execute("select distinct(p1.name, p2.name, g.played_on) as game " + 
+      " from games as g, moves as m, players as p1, players as p2 where g.gameid = m.gameid " + 
+      " and m.position = "+str(positionid1)+ " and g.wplayer = p1.playerid and g.bplayer = p2.playerid; ")
+    for result in num_games_result:
+      game_detail = result['game']
+      games.append(str(game_detail))
   return render_template("games.html", q2_game = games)
 
 
