@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 
 import os
+import json, ast
 import pgn
 import chess
 import logging
@@ -13,6 +14,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 
 DATABASEURI = "postgresql://kq2129:3782@35.196.90.148/proj1part2"
 NEW_PLAYER_ID = -1
+NEW_GAME_ID = -1
 
 pieces = {'R':1,
          'N':2,
@@ -404,20 +406,22 @@ def players():
   return render_template("players.html", id = n_id+1, player_list=players)
 
 
-@app.route('/insertmoves', methods=['GET', 'POST'])
-def insertmoves():
+#@app.route('/insertmoves', methods=['GET', 'POST'])
+def insertmoves( pgn, gameid ):
   board = chess.Board()
-  moves = request.form['pgn']
+  moves = pgn
   positions_list = []
   moves_info =[]
   splitted_move =moves.split('\n')
   pre_position = get_positions(str(board))
   for line in splitted_move:
-    for move  in line.split(' '):
+
+    for move  in line[1:-1].split(' '):
       #print (i+1)
       #try:
       if move[-1] != '.':
-        board.push_san(move)
+ 
+        board.push_san(str(move))
         str_board = str(board)
         curr_position = get_positions(str_board)
         positions_list.append(curr_position)
@@ -441,18 +445,26 @@ def insertmoves():
     position_id = g.conn.execute("SELECT MAX(positionid) as max_pos from positions;")
     for result in position_id:
       pos_id = result["max_pos"] + 1
-      print(pos_id)
 
-    position_row = "(" + str(pos_id) + ", " + "'{" + positions_list[i] + "}'),"
+
+    position_row = "(" + str(pos_id) + ", " + "'{" + positions_list[i] + "}')"
     #position_list[i]=[str(i) for i in position_list[i]]
-    g.conn.execute("INSERT INTO positions VALUES" + "(" + str(pos_id) + ", " + "'{" + positions_list[i] + "}');")
+    g.conn.execute("INSERT INTO positions VALUES" + position_row + ";")
     #position_query.append(position_row)
     
     #print (position_row)
 
   for i in range(len(moves_info)):
-      
-    moves_row = "(" + str(i+100) + ", " + "6" + ", " + str(i+1) + ", " + moves_info[i] + ", "+ str(i+100) + "),"
+    move_id = -1
+    moves_id = g.conn.execute("SELECT MAX(moveid) as max_mov from moves;")
+    for result in position_id:
+      mov_id = result["max_pos"] + 1
+
+    if move_id == -1:
+      return redirect('/error')
+    moves_row = "(" +  str(mov_id) + ", " + str(gameid) + ", " + str(i+1) + ", " + [str(x) for x in moves_info[i]] + ", "+ str(i+100) + "),"
+    g.conn.execute("INSERT INTO moves VALUES" + moves_row + ";")
+
     #moves_info.append(moves_row)
     #print (moves_row)
 
@@ -460,7 +472,14 @@ def insertmoves():
 
 @app.route('/insertgames', methods=['GET', 'POST'])
 def insertgames():
-  gameid = NEW_GAME_ID
+  #gameid = request.form['gameid']
+  get_id_query = "SELECT max(gameid) AS max_id FROM games;"
+  gameid = -1 
+  gameids = g.conn.execute(get_id_query)
+  for result in gameids:
+    gameid =result['max_id'] + 1
+  if gameid == -1:
+    return redirect('/errors')
   wplayer = request.form.get("w_option")
   if wplayer == "":
         return redirect('/error')
@@ -472,6 +491,10 @@ def insertgames():
   tournament = request.form.get("t_option")
   print("INSERT INTO games VALUES(" + str(gameid) + "," + str(wplayer) + "," + str(bplayer) + "," + pgn_text + "," + played_on + "," + str(tournament)+ ");")
   g.conn.execute("INSERT INTO games VALUES(" + str(gameid) + "," + str(wplayer) + "," + str(bplayer) + "," + pgn_text + "," + played_on + "," + str(tournament)+ ");")
+  try:
+    insertmoves(pgn_text, gameid)
+  except:
+    return redirect('/error')
   return redirect('/success')
 
 
