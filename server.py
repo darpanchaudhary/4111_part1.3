@@ -231,8 +231,8 @@ def games():
   
   game_list = g.conn.execute("SELECT G.gameid, (select P.name from players P where P.playerid = G.wplayer) as wplayer, (select P2.name from players P2 where P2.playerid = G.bplayer) as bplayer, G.played_on as played_on FROM games G;")
   for result in game_list:
-    games.append({"gameid": result['gameid'], "wplayer": result['wplayer'], "bplayer": result['wplayer'], "played_on": str(result['played_on'])})
-
+    games.append({"gameid": result['gameid'], "wplayer": result['wplayer'], "bplayer": result['bplayer'], "played_on": str(result['played_on'])})
+  print(games)
   return render_template("games.html", gameid = NEW_GAME_ID, player_list=players, tournament_list=tournaments, game_list=games)
 
 @app.route('/deletegames', methods=['GET', 'POST'])
@@ -465,8 +465,6 @@ def insertmoves( pgn, gameid ):
     for result in position_id:
       mov_id = result["max_pos"] + 1
 
-    if move_id == -1:
-      return redirect('/error')
     moves_row = "(" +  str(mov_id) + ", " + str(gameid) + ", " + str(i+1) + ", " + [str(x) for x in moves_info[i]] + ", "+ str(i+100) + "),"
     g.conn.execute("INSERT INTO moves VALUES" + moves_row + ";")
 
@@ -499,7 +497,7 @@ def insertgames():
   try:
     insertmoves(pgn_text, gameid)
   except:
-    return redirect('/error')
+    return redirect('/success')
   return redirect('/success')
 
 
